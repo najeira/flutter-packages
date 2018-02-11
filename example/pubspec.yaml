@@ -1,0 +1,12 @@
+name: example
+description: flutter packages example.
+
+dependencies:
+  flutter:
+    sdk: flutter
+  dialog:
+    path: ../dialog/
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
