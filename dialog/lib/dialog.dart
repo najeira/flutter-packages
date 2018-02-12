@@ -23,21 +23,50 @@ import 'package:flutter/material.dart';
 ///    not show buttons below its body.
 ///  * [Dialog], on which [SimpleDialog] and [AlertDialog] are based.
 ///  * <https://material.google.com/components/dialogs.html>
-Future<T> showDialogEx<T>({
+Future<T> showTimerDialog<T>({
   @required BuildContext context,
   bool barrierDismissible: true,
   @required Widget child,
-  Duration timeout,
-  Future<T> future,
+  @required Duration timeout,
 }) {
   if (timeout != null) {
-    assert(future == null);
     child = new _TimerDialog(
       child: child,
       duration: timeout,
     );
-  } else if (future != null) {
-    assert(timeout == null);
+  }
+  return showDialog<T>(
+    context: context,
+    barrierDismissible: barrierDismissible,
+    child: child,
+  );
+}
+
+/// Displays a dialog above the current contents of the app.
+///
+/// This function typically receives a [Dialog] widget as its child argument.
+/// Content below the dialog is dimmed with a [ModalBarrier].
+///
+/// The `context` argument is used to look up the [Navigator] and [Theme] for
+/// the dialog. It is only used when the method is called. Its corresponding
+/// widget can be safely removed from the tree before the dialog is closed.
+///
+/// Returns a [Future] that resolves to the value (if any) that was passed to
+/// [Navigator.pop] when the dialog was closed.
+///
+/// See also:
+///  * [AlertDialog], for dialogs that have a row of buttons below a body.
+///  * [SimpleDialog], which handles the scrolling of the contents and does
+///    not show buttons below its body.
+///  * [Dialog], on which [SimpleDialog] and [AlertDialog] are based.
+///  * <https://material.google.com/components/dialogs.html>
+Future<T> showFutureDialog<T>({
+  @required BuildContext context,
+  bool barrierDismissible: true,
+  @required Widget child,
+  @required Future<T> future,
+}) {
+  if (future != null) {
     child = new _FutureDialog(
       child: child,
       future: future,
