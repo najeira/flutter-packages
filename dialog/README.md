@@ -1,9 +1,28 @@
 # dialog
 
-A new flutter package project.
+Dialog utilities for Flutter.
 
-## Getting Started
+## Install
 
-For help getting started with Flutter, view our online [documentation](http://flutter.io/).
+add `dialog` to your pubspec.yaml:
 
-For help on editing package code, view the [documentation](https://flutter.io/developing-packages/).
+```yaml
+dependencies:
+  dialog:
+    git:
+      url: git@github.com:najeira/flutter-packages.git
+      path: dialog
+```
+
+## Usage
+
+```dart
+// show dialog while 3 seconds
+showTimerDialog(
+  context: context,
+  timeout: const Duration(seconds: 3),
+  child: new SimpleDialog(
+    ...
+  ),
+);
+```
