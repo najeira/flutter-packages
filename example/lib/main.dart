@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:dialog/dialog.dart';
@@ -31,12 +33,26 @@ class MyHomePage extends StatelessWidget {
               child: new RaisedButton(
                 child: new Text("Timer dialog"),
                 onPressed: () {
-                  showDialogEx(
+                  showTimerDialog(
                     context: context,
                     child: new Dialog(
                       child: new Text("Hello!"),
                     ),
-                    timeout: const Duration(seconds: 3),
+                    duration: const Duration(seconds: 3),
+                  );
+                },
+              ),
+            ),
+            new Container(
+              child: new RaisedButton(
+                child: new Text("Future dialog"),
+                onPressed: () {
+                  showFutureDialog(
+                    context: context,
+                    child: new Dialog(
+                      child: new Text("Hello!"),
+                    ),
+                    future: new Future.delayed(const Duration(seconds: 3)),
                   );
                 },
               ),
