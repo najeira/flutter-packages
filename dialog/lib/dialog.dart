@@ -27,12 +27,12 @@ Future<T> showTimerDialog<T>({
   @required BuildContext context,
   bool barrierDismissible: true,
   @required Widget child,
-  @required Duration timeout,
+  @required Duration duration,
 }) {
-  if (timeout != null) {
-    child = new _TimerDialog(
+  if (duration != null) {
+    child = new _FutureDialog(
       child: child,
-      duration: timeout,
+      future: new Future.delayed(duration),
     );
   }
   return showDialog<T>(
@@ -79,67 +79,6 @@ Future<T> showFutureDialog<T>({
   );
 }
 
-class _TimerDialog extends StatefulWidget {
-  final Widget child;
-  final Duration duration;
-  
-  _TimerDialog({
-    this.child,
-    this.duration,
-  });
-  
-  @override
-  State<StatefulWidget> createState() {
-    return new _TimerDialogState();
-  }
-}
-
-class _TimerDialogState extends State<_TimerDialog> with WidgetsBindingObserver {
-  Timer timer;
-  
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    _startTimer();
-  }
-  
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _cancelTimer();
-    super.dispose();
-  }
-  
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      _startTimer();
-    } else {
-      _cancelTimer();
-    }
-  }
-  
-  @override
-  Widget build(BuildContext context) {
-    return widget.child;
-  }
-  
-  void _startTimer() {
-    _cancelTimer();
-    timer = new Timer(widget.duration, () {
-      if (mounted) {
-        Navigator.of(context, rootNavigator: true).pop();
-      }
-    });
-  }
-  
-  void _cancelTimer() {
-    timer?.cancel();
-    timer = null;
-  }
-}
-
 class _FutureDialog<T> extends StatefulWidget {
   final Widget child;
   final Future<T> future;
@@ -156,7 +95,7 @@ class _FutureDialog<T> extends StatefulWidget {
 }
 
 class _FutureDialogState<T> extends State<_FutureDialog> with WidgetsBindingObserver {
-  bool active = true;
+  bool foreground = true;
   bool complete = false;
   
   @override
@@ -181,8 +120,8 @@ class _FutureDialogState<T> extends State<_FutureDialog> with WidgetsBindingObse
   
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    active = (state == AppLifecycleState.resumed);
-    if (active && complete) {
+    foreground = (state == AppLifecycleState.resumed);
+    if (foreground && complete) {
       _closeDialog();
     }
   }
@@ -193,8 +132,7 @@ class _FutureDialogState<T> extends State<_FutureDialog> with WidgetsBindingObse
   }
   
   void _closeDialog() {
-    if (mounted && active && complete) {
-      active = false;
+    if (mounted && foreground && complete) {
       Navigator.of(context, rootNavigator: true).pop();
     }
   }
