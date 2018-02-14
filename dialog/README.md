@@ -20,7 +20,18 @@ dependencies:
 // show dialog while 3 seconds
 showTimerDialog(
   context: context,
-  timeout: const Duration(seconds: 3),
+  duration: const Duration(seconds: 3),
+  child: new SimpleDialog(
+    ...
+  ),
+);
+```
+
+```dart
+// show dialog until future completed
+showFutureDialog(
+  context: context,
+  future: yourFuture,
   child: new SimpleDialog(
     ...
   ),
