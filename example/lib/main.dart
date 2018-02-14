@@ -30,6 +30,7 @@ class MyHomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             new Container(
+              padding: const EdgeInsets.only(bottom: 8.0),
               child: new RaisedButton(
                 child: new Text("Timer dialog"),
                 onPressed: () {
