@@ -1,12 +1,14 @@
 name: dialog
 description: Dialog utilities for Flutter.
-version: 0.0.2
-author: najeira
-homepage: https://github.com/najeira
+version: 0.0.3
+author: najeira <najeira@gmail.com>
+homepage: https://github.com/najeira/flutter-packages
 
 dependencies:
+  meta: "^1.0.5"
   flutter:
     sdk: flutter
 
-dev_dependencies:
-  test: ^0.12.0
+environment:
+  sdk: ">=2.0.0-dev.28.0 <3.0.0"
+  flutter: ">=0.2.1 <2.0.0"
