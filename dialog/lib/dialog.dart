@@ -102,11 +102,7 @@ class _FutureDialogState<T> extends State<_FutureDialog> with WidgetsBindingObse
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    widget.future.then((_) {
-      complete = true;
-      _closeDialog();
-    }).catchError((ex) {
-      debugPrint(ex.toString());
+    widget.future.whenComplete(() {
       complete = true;
       _closeDialog();
     });
