@@ -1,4 +1,4 @@
-name: dialog
+name: dialog_example
 description: A dialog example.
 
 # The following line prevents the package from being accidentally published to
@@ -21,10 +21,10 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  dialog:
+    path: ../../packages/dialog/
   flutter:
     sdk: flutter
-  dialog:
-    path: ../dialog/
 
 dev_dependencies:
   flutter_test:

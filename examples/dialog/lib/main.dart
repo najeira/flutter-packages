@@ -4,56 +4,62 @@ import 'package:flutter/material.dart';
 
 import 'package:dialog/dialog.dart';
 
-void main() => runApp(new MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
+    return const MaterialApp(
       title: 'Flutter Demo',
-      home: new MyHomePage(),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatelessWidget {
-  MyHomePage({Key key}) : super(key: key);
-  
+  const MyHomePage({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Examples"),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Examples"),
       ),
-      body: new Center(
-        child: new Column(
+      body: Center(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            new Container(
+            Container(
               padding: const EdgeInsets.only(bottom: 8.0),
-              child: new RaisedButton(
-                child: new Text("Timer dialog"),
+              child: RaisedButton(
+                child: const Text("Timer dialog"),
                 onPressed: () {
                   showTimerDialog(
                     context: context,
-                    child: new Dialog(
-                      child: new Text("Hello!"),
+                    builder: (BuildContext context) => const SimpleDialog(
+                      children: [
+                        Center(child: Text("Hello!")),
+                      ],
                     ),
                     duration: const Duration(seconds: 3),
                   );
                 },
               ),
             ),
-            new Container(
-              child: new RaisedButton(
-                child: new Text("Future dialog"),
+            Container(
+              child: RaisedButton(
+                child: const Text("Future dialog"),
                 onPressed: () {
                   showFutureDialog(
                     context: context,
-                    child: new Dialog(
-                      child: new Text("Hello!"),
+                    builder: (BuildContext context) => const SimpleDialog(
+                      children: [
+                        Center(child: Text("Hello!")),
+                      ],
                     ),
-                    future: new Future.delayed(const Duration(seconds: 3)),
+                    future: Future<void>.delayed(const Duration(seconds: 3)),
                   );
                 },
               ),

@@ -23,22 +23,25 @@ import 'package:flutter/material.dart';
 ///    not show buttons below its body.
 ///  * [Dialog], on which [SimpleDialog] and [AlertDialog] are based.
 ///  * <https://material.google.com/components/dialogs.html>
-Future<T> showTimerDialog<T>({
+Future<void> showTimerDialog({
   @required BuildContext context,
-  bool barrierDismissible: true,
-  @required Widget child,
+  bool barrierDismissible = true,
+  @required WidgetBuilder builder,
   @required Duration duration,
 }) {
-  if (duration != null) {
-    child = new _FutureDialog(
-      child: child,
-      future: new Future.delayed(duration),
-    );
-  }
-  return showDialog<T>(
+  return showDialog<void>(
     context: context,
     barrierDismissible: barrierDismissible,
-    child: child,
+    builder: (BuildContext context) {
+      Widget child = builder(context);
+      if (duration != null) {
+        child = _FutureDialog(
+          child: child,
+          future: Future<void>.delayed(duration),
+        );
+      }
+      return child;
+    },
   );
 }
 
@@ -60,44 +63,50 @@ Future<T> showTimerDialog<T>({
 ///    not show buttons below its body.
 ///  * [Dialog], on which [SimpleDialog] and [AlertDialog] are based.
 ///  * <https://material.google.com/components/dialogs.html>
-Future<T> showFutureDialog<T>({
+Future<void> showFutureDialog({
   @required BuildContext context,
-  bool barrierDismissible: true,
-  @required Widget child,
-  @required Future<T> future,
+  bool barrierDismissible = true,
+  @required WidgetBuilder builder,
+  @required Future future,
 }) {
-  if (future != null) {
-    child = new _FutureDialog(
-      child: child,
-      future: future,
-    );
-  }
-  return showDialog<T>(
+  return showDialog<void>(
     context: context,
     barrierDismissible: barrierDismissible,
-    child: child,
+    builder: (BuildContext context) {
+      Widget child = builder(context);
+      if (future != null) {
+        child = _FutureDialog(
+          child: child,
+          future: future,
+        );
+      }
+      return child;
+    },
   );
 }
 
-class _FutureDialog<T> extends StatefulWidget {
-  final Widget child;
-  final Future<T> future;
-  
-  _FutureDialog({
+class _FutureDialog extends StatefulWidget {
+  const _FutureDialog({
+    Key key,
     this.child,
     this.future,
-  });
-  
+  }) : super(key: key);
+
+  final Widget child;
+
+  final Future future;
+
   @override
   State<StatefulWidget> createState() {
-    return new _FutureDialogState<T>();
+    return _FutureDialogState();
   }
 }
 
-class _FutureDialogState<T> extends State<_FutureDialog> with WidgetsBindingObserver {
+class _FutureDialogState extends State<_FutureDialog>
+    with WidgetsBindingObserver {
   bool foreground = true;
   bool complete = false;
-  
+
   @override
   void initState() {
     super.initState();
@@ -107,26 +116,26 @@ class _FutureDialogState<T> extends State<_FutureDialog> with WidgetsBindingObse
       _closeDialog();
     });
   }
-  
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
-  
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    foreground = (state == AppLifecycleState.resumed);
+    foreground = state == AppLifecycleState.resumed;
     if (foreground && complete) {
       _closeDialog();
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return widget.child;
   }
-  
+
   void _closeDialog() {
     if (mounted && foreground && complete) {
       Navigator.of(context, rootNavigator: true).pop();
