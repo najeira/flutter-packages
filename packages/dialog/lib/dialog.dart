@@ -24,23 +24,19 @@ import 'package:flutter/material.dart';
 ///  * [Dialog], on which [SimpleDialog] and [AlertDialog] are based.
 ///  * <https://material.google.com/components/dialogs.html>
 Future<void> showTimerDialog({
-  @required BuildContext context,
+  required BuildContext context,
   bool barrierDismissible = true,
-  @required WidgetBuilder builder,
-  @required Duration duration,
+  required WidgetBuilder builder,
+  required Duration duration,
 }) {
   return showDialog<void>(
     context: context,
     barrierDismissible: barrierDismissible,
     builder: (BuildContext context) {
-      Widget child = builder(context);
-      if (duration != null) {
-        child = _FutureDialog(
-          child: child,
-          future: Future<void>.delayed(duration),
-        );
-      }
-      return child;
+      return _FutureDialog(
+        child: builder(context),
+        future: Future<void>.delayed(duration),
+      );
     },
   );
 }
@@ -64,32 +60,28 @@ Future<void> showTimerDialog({
 ///  * [Dialog], on which [SimpleDialog] and [AlertDialog] are based.
 ///  * <https://material.google.com/components/dialogs.html>
 Future<void> showFutureDialog({
-  @required BuildContext context,
+  required BuildContext context,
   bool barrierDismissible = true,
-  @required WidgetBuilder builder,
-  @required Future future,
+  required WidgetBuilder builder,
+  required Future future,
 }) {
   return showDialog<void>(
     context: context,
     barrierDismissible: barrierDismissible,
     builder: (BuildContext context) {
-      Widget child = builder(context);
-      if (future != null) {
-        child = _FutureDialog(
-          child: child,
-          future: future,
-        );
-      }
-      return child;
+      return _FutureDialog(
+        child: builder(context),
+        future: future,
+      );
     },
   );
 }
 
 class _FutureDialog extends StatefulWidget {
   const _FutureDialog({
-    Key key,
-    this.child,
-    this.future,
+    Key? key,
+    required this.child,
+    required this.future,
   }) : super(key: key);
 
   final Widget child;
@@ -110,7 +102,7 @@ class _FutureDialogState extends State<_FutureDialog>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
     widget.future.whenComplete(() {
       complete = true;
       _closeDialog();
@@ -119,7 +111,7 @@ class _FutureDialogState extends State<_FutureDialog>
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 
