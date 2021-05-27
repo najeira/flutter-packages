@@ -9,9 +9,9 @@ class NullableValidDate extends Date {
   /// Returns a [NullableValidDate] object if parameters are valid
   /// otherwise asserts an error.
   NullableValidDate({
-    final int year,
-    final int month,
-    final int day,
+    final int? year,
+    final int? month,
+    final int? day,
   })  : assert(
           DateUtil.isNullableValidDate(
             year: year,

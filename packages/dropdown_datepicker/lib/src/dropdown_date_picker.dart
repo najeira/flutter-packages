@@ -22,17 +22,17 @@ class DropdownDatePicker extends StatefulWidget {
   final ValidDate lastDate;
 
   /// Text style of the dropdown button and it's menu items
-  final TextStyle textStyle;
+  final TextStyle? textStyle;
 
   /// The widget to use for drawing the drop-down button's underline.
   ///
   /// Defaults to a 2.0 height bottom container with Theme.of(context).primaryColor
-  final Widget underLine;
+  final Widget? underLine;
 
   /// The background color of the dropdown.
   ///
   /// If it is not provided, the theme's [ThemeData.canvasColor] will be used instead.
-  final Color dropdownColor;
+  final Color? dropdownColor;
 
   /// If true [DropdownMenuItem]s will be built in ascending order
   final bool ascending;
@@ -48,24 +48,24 @@ class DropdownDatePicker extends StatefulWidget {
   Date get currentDate => _currentDate;
 
   /// Returns currently selected day
-  int get day {
+  int? get day {
     return _currentDate?.day;
   }
 
   /// Returns currently selected month
-  int get month {
+  int? get month {
     return _currentDate?.month;
   }
 
   /// Returns currently selected year
-  int get year {
+  int? get year {
     return _currentDate?.year;
   }
 
   /// Returns date as String by a [separator]
   /// based on [dateFormat]
-  String getDate([String separator = '-']) {
-    String date;
+  String? getDate([String separator = '-']) {
+    String? date;
     var year = _currentDate?.year;
     var month = Date.toStringWithLeadingZeroIfLengthIsOne(_currentDate?.month);
     var day = Date.toStringWithLeadingZeroIfLengthIsOne(_currentDate?.day);
@@ -94,8 +94,8 @@ class DropdownDatePicker extends StatefulWidget {
   ///
   /// By default [dateFormat] is [DateFormat.ymd].
   DropdownDatePicker({
-    @required this.firstDate,
-    @required this.lastDate,
+    required this.firstDate,
+    required this.lastDate,
     Date initialDate = const NullableValidDate.nullDate(),
     this.dateFormat = DateFormat.ymd,
     this.dateHint = const DateHint(),
@@ -103,7 +103,7 @@ class DropdownDatePicker extends StatefulWidget {
     this.textStyle,
     this.underLine,
     this.ascending = true,
-    final Key key,
+    final Key? key,
   })  : assert(firstDate < lastDate, 'First date must be before last date.'),
         assert(_isValidInitialDate(initialDate, firstDate, lastDate),
             'Initial date must be null or between first and last date.'),
@@ -112,14 +112,14 @@ class DropdownDatePicker extends StatefulWidget {
 
   static bool _isValidInitialDate(Date date, Date firstDate, Date lastDate) {
     if (date?.year == null) return true;
-    if (date.year < firstDate.year) return false;
-    if (date.year > lastDate.year) return false;
+    if (date.year! < firstDate.year!) return false;
+    if (date.year! > lastDate.year!) return false;
     if (date?.month == null) return true;
-    if (date.month < firstDate.month) return false;
-    if (date.month > lastDate.month) return false;
+    if (date.month! < firstDate.month!) return false;
+    if (date.month! > lastDate.month!) return false;
     if (date?.day == null) return true;
-    if (date.day < firstDate.day) return false;
-    if (date.day > lastDate.day) return false;
+    if (date.day! < firstDate.day!) return false;
+    if (date.day! > lastDate.day!) return false;
 
     return true;
   }
@@ -129,7 +129,7 @@ class DropdownDatePicker extends StatefulWidget {
 }
 
 class _DropdownDatePickerState extends State<DropdownDatePicker> {
-  List<DropdownMenuItem<int>> _buildDropdownMenuItemList(int min, int max) {
+  List<DropdownMenuItem<int>> _buildDropdownMenuItemList(int? min, int? max) {
     return _intGenerator(min, max, widget.ascending)
         .map(
           (i) => DropdownMenuItem<int>(
@@ -148,10 +148,10 @@ class _DropdownDatePickerState extends State<DropdownDatePicker> {
   }
 
   Widget _buildDropdownButton({
-    @required final int initialValue,
-    @required final String hint,
-    @required final Function onChanged,
-    @required final List<DropdownMenuItem<int>> items,
+    required final int? initialValue,
+    required final String hint,
+    required final Function onChanged,
+    required final List<DropdownMenuItem<int>> items,
   }) {
     return DropdownButton<int>(
       dropdownColor: widget.dropdownColor,
@@ -170,13 +170,13 @@ class _DropdownDatePickerState extends State<DropdownDatePicker> {
     );
   }
 
-  Iterable<int> _intGenerator(int start, int end, bool ascending) sync* {
+  Iterable<int> _intGenerator(int? start, int? end, bool ascending) sync* {
     if (ascending) {
-      for (var i = start; i <= end; i++) {
+      for (var i = start!; i <= end!; i++) {
         yield i;
       }
     } else {
-      for (var i = end; i >= start; i--) {
+      for (var i = end!; i >= start!; i--) {
         yield i;
       }
     }
@@ -196,21 +196,21 @@ class _DropdownDatePickerState extends State<DropdownDatePicker> {
   }
 
   Widget _buildMonthDropdownButton() {
-    var minMonth = 1;
-    var maxMonth = 12;
+    int? minMonth = 1;
+    int? maxMonth = 12;
 
     if (widget._currentDate?.year != null) {
       if (widget.firstDate.year == widget._currentDate?.year) {
         minMonth = widget.firstDate.month;
         if (widget._currentDate?.month != null &&
-            widget._currentDate.month < widget.firstDate.month) {
+            widget._currentDate.month! < widget.firstDate.month!) {
           widget._currentDate = widget._currentDate.copyWith(month: minMonth);
         }
       }
       if (widget.lastDate.year == widget._currentDate?.year) {
         maxMonth = widget.lastDate.month;
         if (widget._currentDate?.month != null &&
-            widget._currentDate.month > widget.lastDate.month) {
+            widget._currentDate.month! > widget.lastDate.month!) {
           widget._currentDate = widget._currentDate.copyWith(month: maxMonth);
         }
       }
@@ -231,8 +231,8 @@ class _DropdownDatePickerState extends State<DropdownDatePicker> {
   }
 
   Widget _buildDayDropdownButton() {
-    var minDay = 1;
-    var maxDay = DateUtil.daysInDate(
+    int? minDay = 1;
+    int? maxDay = DateUtil.daysInDate(
       month: widget._currentDate?.month,
       year: widget._currentDate?.year,
     );
@@ -240,18 +240,18 @@ class _DropdownDatePickerState extends State<DropdownDatePicker> {
     if (widget._currentDate?.month != null) {
       if (widget._currentDate?.year != null) {
         if (widget.firstDate.year == widget._currentDate?.year &&
-            widget.firstDate.month >= widget._currentDate?.month) {
+            widget.firstDate.month! >= widget._currentDate?.month!) {
           minDay = widget.firstDate.day;
           if (widget._currentDate.day != null &&
-              widget.firstDate.day >= widget._currentDate?.day) {
+              widget.firstDate.day! >= widget._currentDate?.day!) {
             widget._currentDate = widget._currentDate.copyWith(day: minDay);
           }
         }
         if (widget.lastDate.year == widget._currentDate?.year &&
-            widget.lastDate.month <= widget._currentDate?.month) {
+            widget.lastDate.month! <= widget._currentDate?.month!) {
           maxDay = widget.lastDate.day;
           if (widget._currentDate.day != null &&
-              widget.lastDate.day <= widget._currentDate?.day) {
+              widget.lastDate.day! <= widget._currentDate?.day!) {
             widget._currentDate = widget._currentDate.copyWith(day: maxDay);
           }
         }

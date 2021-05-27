@@ -5,16 +5,16 @@ import '../src/nullable_valid_date.dart';
 
 @immutable
 class _Date extends Date {
-  _Date({int year, int month, int day})
+  _Date({int? year, int? month, int? day})
       : super(year: year, month: month, day: day);
 }
 
 /// Base class for other date class objects
 @immutable
 abstract class Date {
-  final int year;
-  final int month;
-  final int day;
+  final int? year;
+  final int? month;
+  final int? day;
 
   /// Base class for date objects
   const Date({this.year, this.month, this.day});
@@ -25,23 +25,23 @@ abstract class Date {
   }
 
   @override
-  int get hashCode => year ^ month ^ day;
+  int get hashCode => year! ^ month! ^ day!;
 
   bool _greater(Date nonNullDate, Date other) {
-    if (nonNullDate.year < other.year) return true;
-    if (nonNullDate.year > other.year) return false;
-    if (nonNullDate.month < other.month) return true;
-    if (nonNullDate.month > other.month) return false;
-    if (nonNullDate.day < other.day) return true;
+    if (nonNullDate.year! < other.year!) return true;
+    if (nonNullDate.year! > other.year!) return false;
+    if (nonNullDate.month! < other.month!) return true;
+    if (nonNullDate.month! > other.month!) return false;
+    if (nonNullDate.day! < other.day!) return true;
     return false;
   }
 
   bool _smaller(Date nonNullDate, Date other) {
-    if (nonNullDate.year > other.year) return true;
-    if (nonNullDate.year < other.year) return false;
-    if (nonNullDate.month > other.month) return true;
-    if (nonNullDate.month < other.month) return false;
-    if (nonNullDate.day > other.day) return true;
+    if (nonNullDate.year! > other.year!) return true;
+    if (nonNullDate.year! < other.year!) return false;
+    if (nonNullDate.month! > other.month!) return true;
+    if (nonNullDate.month! < other.month!) return false;
+    if (nonNullDate.day! > other.day!) return true;
     return false;
   }
 
@@ -99,7 +99,7 @@ abstract class Date {
     var day = toStringWithLeadingZeroIfLengthIsOne(this.day);
     var month = toStringWithLeadingZeroIfLengthIsOne(this.month);
 
-    String date;
+    late String date;
     switch (dateFormat) {
       case DateFormat.ymd:
         date = '$year$separator$month$separator$day';
@@ -117,7 +117,7 @@ abstract class Date {
   /// If [number] length is 1 add a leading 0 character at concatenation.
   ///
   /// If length is not exactly 1 return normat toString()
-  static String toStringWithLeadingZeroIfLengthIsOne(int number) {
+  static String toStringWithLeadingZeroIfLengthIsOne(int? number) {
     return number.toString().length == 1
         ? '0${number.toString()}'
         : number.toString();
@@ -126,10 +126,10 @@ abstract class Date {
   /// Returns a new [NullableValidDate] object with either the current values,
   /// or replacing those values with the ones passed in.
   Date copyWith({
-    final int year,
-    final int month,
-    final int day,
-    final DateFormat dateFormat,
+    final int? year,
+    final int? month,
+    final int? day,
+    final DateFormat? dateFormat,
   }) {
     return NullableValidDate(
       year: year ?? this.year,

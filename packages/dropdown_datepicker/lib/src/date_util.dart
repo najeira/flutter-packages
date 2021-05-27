@@ -7,7 +7,7 @@ class DateUtil {
 
   /// Returns the number of days in a given month based on [year] and [month]
 
-  static int daysInDate({int month, int year}) {
+  static int daysInDate({int? month, int? year}) {
     if (month == 2) {
       if (year == null || isLeapYear(year)) {
         return 29;
@@ -53,10 +53,10 @@ class DateUtil {
   ///
   /// Example: (year: 2011, month: 2, day: 29)
   /// will be fixed to (year: 2010, month: 2, day: 28)
-  static int fixDay({
-    final int year,
-    final int month,
-    final int day,
+  static int? fixDay({
+    final int? year,
+    final int? month,
+    final int? day,
   }) {
     if (day == null || month == null) {
       return day;
@@ -79,7 +79,7 @@ class DateUtil {
 
   /// Checks if [year], [month] and [day] makes a valid date.
   /// Returns true if it does false if doesn't.
-  static bool isValidDate({int year, int month, int day}) {
+  static bool isValidDate({int? year, int? month, int? day}) {
     if (year == null || month == null || day == null) {
       return false;
     }
@@ -109,7 +109,7 @@ class DateUtil {
   /// Checks if [year], [month] and [day] makes a valid date.
   ///
   /// [year], [month] and/or [day] can be null.
-  static bool isNullableValidDate({int year, int month, int day}) {
+  static bool isNullableValidDate({int? year, int? month, int? day}) {
     if (month != null && (month < 1 || month > 12)) {
       return false;
     }
