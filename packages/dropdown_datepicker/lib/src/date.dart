@@ -5,8 +5,11 @@ import '../src/nullable_valid_date.dart';
 
 @immutable
 class _Date extends Date {
-  _Date({int? year, int? month, int? day})
-      : super(year: year, month: month, day: day);
+  _Date({
+    required int year,
+    required int month,
+    required int day,
+  }) : super(year: year, month: month, day: day);
 }
 
 /// Base class for other date class objects
@@ -27,7 +30,7 @@ abstract class Date {
   @override
   int get hashCode => year! ^ month! ^ day!;
 
-  bool _greater(Date nonNullDate, Date other) {
+  bool _greater(_Date nonNullDate, _Date other) {
     if (nonNullDate.year! < other.year!) return true;
     if (nonNullDate.year! > other.year!) return false;
     if (nonNullDate.month! < other.month!) return true;
@@ -36,7 +39,7 @@ abstract class Date {
     return false;
   }
 
-  bool _smaller(Date nonNullDate, Date other) {
+  bool _smaller(_Date nonNullDate, _Date other) {
     if (nonNullDate.year! > other.year!) return true;
     if (nonNullDate.year! < other.year!) return false;
     if (nonNullDate.month! > other.month!) return true;
@@ -45,7 +48,7 @@ abstract class Date {
     return false;
   }
 
-  Date _convertDateValuesToZeroIfNull(Date date) {
+  _Date _convertDateValuesToZeroIfNull(Date date) {
     return _Date(
       year: date.year ?? 0,
       month: date.month ?? 0,
