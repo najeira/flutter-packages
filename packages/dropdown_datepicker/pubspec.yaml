@@ -1,6 +1,6 @@
 name: dropdown_date_picker 
 description: A dropdown date picker package for date selection like year, month and day.
-version: 0.1.1+2
+version: 0.2.0
 issue_tracker: https://gitlab.com/Patesz/dropdown_datepicker/issues
 homepage: https://gitlab.com/Patesz/dropdown_datepicker
 
