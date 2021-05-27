@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'date.dart';
 import 'date_format.dart';
-import 'date_hint.dart';
 import 'date_util.dart';
 import 'nullable_valid_date.dart';
 
@@ -13,10 +12,7 @@ class DropdownDatePicker extends StatefulWidget {
   /// Creates an instance of [DropdownDatePicker].
   ///
   /// [firstYear] must be before [lastYear]
-  /// and [initialDate] must be between their range
-  ///
-  /// [initialDate] is optional, if not provided a hintText
-  /// will be shown in their [DropDownButton]'s
+  /// and [initialDate] must be between their range.
   ///
   /// By default [dateFormat] is [DateFormat.ymd].
   const DropdownDatePicker({
@@ -25,7 +21,6 @@ class DropdownDatePicker extends StatefulWidget {
     this.lastYear = 2999,
     this.initialDate = const NullableValidDate.nullDate(),
     this.dateFormat = DateFormat.ymd,
-    this.dateHint = const DateHint(),
     this.textStyle,
     this.dropdownColor,
     this.underline = const _Underline(),
@@ -57,11 +52,6 @@ class DropdownDatePicker extends StatefulWidget {
   ///
   /// Defaults to a 1.0 height bottom container with Theme.of(context).dividerColor
   final Widget? underline;
-
-  /// Contains year, month and day DropdownButton's hint texts
-  ///
-  /// Default is: 'yyyy', 'mm', 'dd'
-  final DateHint dateHint;
 
   @override
   DropdownDatePickerState createState() => DropdownDatePickerState();
@@ -104,13 +94,13 @@ class DropdownDatePickerState extends State<DropdownDatePicker> {
       year: currentDate.year,
     );
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         _DropdownMenuButton(
           value: currentDate.year,
           textStyle: widget.textStyle,
           dropdownColor: widget.dropdownColor,
           underline: widget.underline,
-          hintText: widget.dateHint.year,
           onChanged: (int? value) {
             _setCurrentDate(NullableValidDate(
               year: value,
@@ -134,7 +124,6 @@ class DropdownDatePickerState extends State<DropdownDatePicker> {
           textStyle: widget.textStyle,
           dropdownColor: widget.dropdownColor,
           underline: widget.underline,
-          hintText: widget.dateHint.month,
           onChanged: (int? value) {
             _setCurrentDate(NullableValidDate(
               year: year,
@@ -154,7 +143,6 @@ class DropdownDatePickerState extends State<DropdownDatePicker> {
           textStyle: widget.textStyle,
           dropdownColor: widget.dropdownColor,
           underline: widget.underline,
-          hintText: widget.dateHint.day,
           onChanged: (int? value) {
             _setCurrentDate(NullableValidDate(
               year: year,
@@ -179,7 +167,6 @@ class _DropdownMenuButton extends StatelessWidget {
     this.value,
     this.textStyle,
     this.dropdownColor,
-    this.hintText,
     this.underline,
     this.onChanged,
     required this.items,
@@ -191,8 +178,6 @@ class _DropdownMenuButton extends StatelessWidget {
 
   final Color? dropdownColor;
 
-  final String? hintText;
-
   final Widget? underline;
 
   final ValueChanged<int?>? onChanged;
@@ -203,19 +188,10 @@ class _DropdownMenuButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final mergedStyle = theme.textTheme.subtitle1!.merge(textStyle);
-    final hintWidget = hintText != null
-        ? Text(
-            hintText!,
-            style: TextStyle(
-              color: theme.disabledColor,
-            ),
-          )
-        : null;
     return DropdownButton<int?>(
       style: mergedStyle,
       underline: underline,
       value: value,
-      hint: hintWidget,
       onChanged: onChanged,
       items: items,
     );
