@@ -27,8 +27,8 @@ class DropdownDatePicker extends StatefulWidget {
     this.dateFormat = DateFormat.ymd,
     this.dateHint = const DateHint(),
     this.textStyle,
+    this.dropdownColor,
     this.underline = const _Underline(),
-    this.ascending = true,
   })  : assert(firstYear < lastYear, 'First year must be before last year.'),
         super(key: key);
 
@@ -47,13 +47,16 @@ class DropdownDatePicker extends StatefulWidget {
   /// Text style of the dropdown button and it's menu items
   final TextStyle? textStyle;
 
+  /// The background color of the dropdown.
+  ///
+  /// If it is not provided, the theme's [ThemeData.canvasColor] will be used
+  /// instead.
+  final Color? dropdownColor;
+
   /// The widget to use for drawing the drop-down button's underline.
   ///
   /// Defaults to a 1.0 height bottom container with Theme.of(context).dividerColor
   final Widget? underline;
-
-  /// If true [DropdownMenuItem]s will be built in ascending order
-  final bool ascending;
 
   /// Contains year, month and day DropdownButton's hint texts
   ///
@@ -61,11 +64,19 @@ class DropdownDatePicker extends StatefulWidget {
   final DateHint dateHint;
 
   @override
-  _DropdownDatePickerState createState() => _DropdownDatePickerState();
+  DropdownDatePickerState createState() => DropdownDatePickerState();
 }
 
-class _DropdownDatePickerState extends State<DropdownDatePicker> {
+class DropdownDatePickerState extends State<DropdownDatePicker> {
   Date? _currentDate;
+
+  void _setCurrentDate(Date date) {
+    if (_currentDate != date) {
+      setState(() {
+        _currentDate = date;
+      });
+    }
+  }
 
   /// Holds the currently selected date
   Date get currentDate => _currentDate ?? widget.initialDate;
@@ -85,23 +96,6 @@ class _DropdownDatePickerState extends State<DropdownDatePicker> {
     return currentDate.year;
   }
 
-  /// Returns date as String by a [separator]
-  /// based on [dateFormat]
-  String getDate([String separator = '-']) {
-    final date = currentDate;
-    final year = date.year;
-    final month = Date.toStringWithLeadingZeroIfLengthIsOne(date.month);
-    final day = Date.toStringWithLeadingZeroIfLengthIsOne(date.day);
-    switch (widget.dateFormat) {
-      case DateFormat.ymd:
-        return '$year$separator$month$separator$day';
-      case DateFormat.dmy:
-        return '$day$separator$month$separator$year';
-      case DateFormat.mdy:
-        return '$month$separator$day$separator$year';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -111,13 +105,18 @@ class _DropdownDatePickerState extends State<DropdownDatePicker> {
     );
     return Row(
       children: [
-        _DropdownMenuButton<int?>(
+        _DropdownMenuButton(
           value: currentDate.year,
           textStyle: widget.textStyle,
+          dropdownColor: widget.dropdownColor,
           underline: widget.underline,
           hintText: widget.dateHint.year,
           onChanged: (int? value) {
-            _currentDate = currentDate.copyWith(year: value);
+            _setCurrentDate(NullableValidDate(
+              year: value,
+              month: month,
+              day: day,
+            ));
           },
           items: _buildDropdownMenuItemList(
             widget.firstYear,
@@ -126,37 +125,47 @@ class _DropdownDatePickerState extends State<DropdownDatePicker> {
           ),
         ),
         Text(
-          "年",
+          '年',
           style: theme.textTheme.caption,
         ),
         const SizedBox(width: 12.0),
-        _DropdownMenuButton<int?>(
+        _DropdownMenuButton(
           value: currentDate.month,
           textStyle: widget.textStyle,
+          dropdownColor: widget.dropdownColor,
           underline: widget.underline,
           hintText: widget.dateHint.month,
           onChanged: (int? value) {
-            _currentDate = currentDate.copyWith(month: value);
+            _setCurrentDate(NullableValidDate(
+              year: year,
+              month: value,
+              day: day,
+            ));
           },
           items: _buildDropdownMenuItemList(1, 12, true),
         ),
         Text(
-          "月",
+          '月',
           style: theme.textTheme.caption,
         ),
         const SizedBox(width: 12.0),
-        _DropdownMenuButton<int?>(
+        _DropdownMenuButton(
           value: currentDate.day,
           textStyle: widget.textStyle,
+          dropdownColor: widget.dropdownColor,
           underline: widget.underline,
           hintText: widget.dateHint.day,
           onChanged: (int? value) {
-            _currentDate = currentDate.copyWith(day: value);
+            _setCurrentDate(NullableValidDate(
+              year: year,
+              month: month,
+              day: value,
+            ));
           },
           items: _buildDropdownMenuItemList(1, maxDay, true),
         ),
         Text(
-          "日",
+          '日',
           style: theme.textTheme.caption,
         ),
       ],
@@ -164,32 +173,36 @@ class _DropdownDatePickerState extends State<DropdownDatePicker> {
   }
 }
 
-class _DropdownMenuButton<T> extends StatelessWidget {
+class _DropdownMenuButton extends StatelessWidget {
   const _DropdownMenuButton({
     Key? key,
     this.value,
     this.textStyle,
+    this.dropdownColor,
     this.hintText,
     this.underline,
     this.onChanged,
-    this.items,
+    required this.items,
   }) : super(key: key);
 
-  final T? value;
+  final int? value;
 
   final TextStyle? textStyle;
+
+  final Color? dropdownColor;
 
   final String? hintText;
 
   final Widget? underline;
 
-  final ValueChanged<T?>? onChanged;
+  final ValueChanged<int?>? onChanged;
 
-  final List<DropdownMenuItem<T>>? items;
+  final List<DropdownMenuItem<int?>> items;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final mergedStyle = theme.textTheme.subtitle1!.merge(textStyle);
     final hintWidget = hintText != null
         ? Text(
             hintText!,
@@ -198,8 +211,8 @@ class _DropdownMenuButton<T> extends StatelessWidget {
             ),
           )
         : null;
-    return DropdownButton<T>(
-      style: textStyle,
+    return DropdownButton<int?>(
+      style: mergedStyle,
       underline: underline,
       value: value,
       hint: hintWidget,
