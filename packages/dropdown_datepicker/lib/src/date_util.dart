@@ -1,3 +1,6 @@
+import 'date.dart';
+import 'date_format.dart';
+
 /// Utility class which contains useful static functions for dates.
 class DateUtil {
   /// Returns `true` if [year] is leap year `false` if not.
@@ -132,5 +135,24 @@ class DateUtil {
     }
 
     return true;
+  }
+
+  /// Returns date as String by a [separator]
+  /// based on [dateFormat]
+  static String formatDate(Date date, {
+    required DateFormat format,
+    String separator = '-',
+  }) {
+    final year = date.year;
+    final month = Date.toStringWithLeadingZeroIfLengthIsOne(date.month);
+    final day = Date.toStringWithLeadingZeroIfLengthIsOne(date.day);
+    switch (format) {
+      case DateFormat.ymd:
+        return '$year$separator$month$separator$day';
+      case DateFormat.dmy:
+        return '$day$separator$month$separator$year';
+      case DateFormat.mdy:
+        return '$month$separator$day$separator$year';
+    }
   }
 }
