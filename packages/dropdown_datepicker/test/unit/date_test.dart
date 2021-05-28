@@ -7,17 +7,17 @@ void main() {
     expect(date.toString(), '2010-05-01');
 
     final date2 = ValidDate(year: 10, month: 11, day: 24);
-    expect(date2.toString(), '10-11-24');
+    expect(date2.toString(), '0010-11-24');
   });
 
   test('Date base class toString with DateFormat.dmy and / separator', () {
     final date = ValidDate(year: 10, month: 11, day: 24);
-    expect(date.toString(DateFormat.dmy, '/'), '24/11/10');
+    expect(date.toString(DateFormat.dmy, '/'), '24/11/0010');
   });
 
   test('Date base class toString with null values', () {
     final date = NullableValidDate(year: null, month: null);
-    expect(date.toString(DateFormat.mdy, '/'), 'null/null/null');
+    expect(date.toString(DateFormat.mdy, '/'), '00/00/0000');
   });
 
   group('Operator tests:', (() {
