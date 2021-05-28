@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'date.dart';
 import 'date_format.dart';
+import 'date_separator.dart';
 import 'date_util.dart';
 import 'nullable_valid_date.dart';
 
@@ -24,6 +25,7 @@ class DropdownDatePicker extends StatefulWidget {
     this.textStyle,
     this.dropdownColor,
     this.underline = const _Underline(),
+    this.separator,
   })  : assert(firstYear < lastYear, 'First year must be before last year.'),
         super(key: key);
 
@@ -52,6 +54,9 @@ class DropdownDatePicker extends StatefulWidget {
   ///
   /// Defaults to a 1.0 height bottom container with Theme.of(context).dividerColor
   final Widget? underline;
+
+  /// 
+  final DateSeparator? separator;
 
   @override
   DropdownDatePickerState createState() => DropdownDatePickerState();
@@ -114,10 +119,11 @@ class DropdownDatePickerState extends State<DropdownDatePicker> {
             false,
           ),
         ),
-        Text(
-          '年',
-          style: theme.textTheme.caption,
-        ),
+        if (widget.separator != null)
+          Text(
+            widget.separator!.year,
+            style: theme.textTheme.caption,
+          ),
         const SizedBox(width: 12.0),
         _DropdownMenuButton(
           value: currentDate.month,
@@ -133,10 +139,11 @@ class DropdownDatePickerState extends State<DropdownDatePicker> {
           },
           items: _buildDropdownMenuItemList(1, 12, true),
         ),
-        Text(
-          '月',
-          style: theme.textTheme.caption,
-        ),
+        if (widget.separator != null)
+          Text(
+            widget.separator!.month,
+            style: theme.textTheme.caption,
+          ),
         const SizedBox(width: 12.0),
         _DropdownMenuButton(
           value: currentDate.day,
@@ -152,10 +159,11 @@ class DropdownDatePickerState extends State<DropdownDatePicker> {
           },
           items: _buildDropdownMenuItemList(1, maxDay, true),
         ),
-        Text(
-          '日',
-          style: theme.textTheme.caption,
-        ),
+        if (widget.separator != null)
+          Text(
+            widget.separator!.day,
+            style: theme.textTheme.caption,
+          ),
       ],
     );
   }
