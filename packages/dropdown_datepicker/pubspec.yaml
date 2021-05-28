@@ -1,4 +1,4 @@
-name: dropdown_date_picker
+name: dropdown_datepicker
 description: A dropdown date picker package for date selection like year, month and day.
 version: 0.2.1
 issue_tracker: https://github.com/najeira/flutter-packages/issues
