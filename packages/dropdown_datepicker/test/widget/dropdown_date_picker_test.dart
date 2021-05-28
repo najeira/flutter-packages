@@ -30,7 +30,7 @@ void main() {
 
   testWidgets('with valid first and last date param but null initial date',
       (tester) async {
-    final widget = MaterialApp(
+    const widget = MaterialApp(
       home: Scaffold(
         body: DropdownDatePicker(
           firstYear: 2005,

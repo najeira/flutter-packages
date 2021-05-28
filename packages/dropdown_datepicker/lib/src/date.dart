@@ -5,7 +5,7 @@ import '../src/nullable_valid_date.dart';
 
 @immutable
 class _Date extends Date {
-  _Date({
+  const _Date({
     required int year,
     required int month,
     required int day,
@@ -15,16 +15,16 @@ class _Date extends Date {
 /// Base class for other date class objects
 @immutable
 abstract class Date {
+  /// Base class for date objects
+  const Date({this.year, this.month, this.day});
+
   final int? year;
   final int? month;
   final int? day;
 
-  /// Base class for date objects
-  const Date({this.year, this.month, this.day});
-
   @override
-  bool operator ==(o) {
-    return o is Date && year == o.year && month == o.month && day == o.day;
+  bool operator ==(Object other) {
+    return other is Date && year == other.year && month == other.month && day == other.day;
   }
 
   @override

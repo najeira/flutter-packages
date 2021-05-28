@@ -20,7 +20,7 @@ void main() {
     expect(date.toString(DateFormat.mdy, '/'), '00/00/0000');
   });
 
-  group('Operator tests:', (() {
+  group('Operator tests:', () {
     final date1 = ValidDate(year: 2013, month: 11, day: 24);
     final date2 = ValidDate(year: 2012, month: 1, day: 28);
     final date3 = ValidDate(year: 2012, month: 1, day: 28);
@@ -128,5 +128,5 @@ void main() {
       expect(date8.hasNull(), true);
       expect(date11.hasNull(), true);
     });
-  }));
+  });
 }
