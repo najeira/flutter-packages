@@ -221,7 +221,7 @@ List<DropdownMenuItem<int?>> _buildDropdownMenuItemList(
           value: i,
           child: Center(
             child: Text(
-              (i ?? 0).toString().padLeft(2, '0'),
+              i?.toString().padLeft(2, '0') ?? '',
             ),
           ),
         ),
