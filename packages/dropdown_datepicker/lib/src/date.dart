@@ -5,7 +5,7 @@ import '../src/nullable_valid_date.dart';
 
 @immutable
 class _Date extends Date {
-  _Date({
+  const _Date({
     required int year,
     required int month,
     required int day,
@@ -15,36 +15,56 @@ class _Date extends Date {
 /// Base class for other date class objects
 @immutable
 abstract class Date {
+  /// Base class for date objects
+  const Date({this.year, this.month, this.day});
+
   final int? year;
   final int? month;
   final int? day;
 
-  /// Base class for date objects
-  const Date({this.year, this.month, this.day});
-
   @override
-  bool operator ==(o) {
-    return o is Date && year == o.year && month == o.month && day == o.day;
+  bool operator ==(Object other) {
+    return other is Date && year == other.year && month == other.month && day == other.day;
   }
 
   @override
-  int get hashCode => year! ^ month! ^ day!;
+  int get hashCode => (year ?? 0) ^ (month ?? 0) ^ (day ?? 0);
 
   bool _greater(_Date nonNullDate, _Date other) {
-    if (nonNullDate.year! < other.year!) return true;
-    if (nonNullDate.year! > other.year!) return false;
-    if (nonNullDate.month! < other.month!) return true;
-    if (nonNullDate.month! > other.month!) return false;
-    if (nonNullDate.day! < other.day!) return true;
+    if (nonNullDate.year! < other.year!) {
+      return true;
+    }
+    if (nonNullDate.year! > other.year!) {
+      return false;
+    }
+    if (nonNullDate.month! < other.month!) {
+      return true;
+    }
+    if (nonNullDate.month! > other.month!) {
+      return false;
+    }
+    if (nonNullDate.day! < other.day!) {
+      return true;
+    }
     return false;
   }
 
   bool _smaller(_Date nonNullDate, _Date other) {
-    if (nonNullDate.year! > other.year!) return true;
-    if (nonNullDate.year! < other.year!) return false;
-    if (nonNullDate.month! > other.month!) return true;
-    if (nonNullDate.month! < other.month!) return false;
-    if (nonNullDate.day! > other.day!) return true;
+    if (nonNullDate.year! > other.year!) {
+      return true;
+    }
+    if (nonNullDate.year! < other.year!) {
+      return false;
+    }
+    if (nonNullDate.month! > other.month!) {
+      return true;
+    }
+    if (nonNullDate.month! < other.month!) {
+      return false;
+    }
+    if (nonNullDate.day! > other.day!) {
+      return true;
+    }
     return false;
   }
 
@@ -62,34 +82,38 @@ abstract class Date {
   }
 
   bool operator <=(Date other) {
-    var nonNullThisDate = _convertDateValuesToZeroIfNull(this);
-    var nonNullOtherDate = _convertDateValuesToZeroIfNull(other);
-
-    if (nonNullThisDate == nonNullOtherDate) return true;
+    final nonNullThisDate = _convertDateValuesToZeroIfNull(this);
+    final nonNullOtherDate = _convertDateValuesToZeroIfNull(other);
+    if (nonNullThisDate == nonNullOtherDate) {
+      return true;
+    }
     return _greater(nonNullThisDate, nonNullOtherDate);
   }
 
   bool operator <(Date other) {
-    var nonNullThisDate = _convertDateValuesToZeroIfNull(this);
-    var nonNullOtherDate = _convertDateValuesToZeroIfNull(other);
-
-    if (nonNullThisDate == nonNullOtherDate) return false;
+    final nonNullThisDate = _convertDateValuesToZeroIfNull(this);
+    final nonNullOtherDate = _convertDateValuesToZeroIfNull(other);
+    if (nonNullThisDate == nonNullOtherDate) {
+      return false;
+    }
     return _greater(nonNullThisDate, nonNullOtherDate);
   }
 
   bool operator >=(Date other) {
-    var nonNullThisDate = _convertDateValuesToZeroIfNull(this);
-    var nonNullOtherDate = _convertDateValuesToZeroIfNull(other);
-
-    if (nonNullThisDate == nonNullOtherDate) return true;
+    final nonNullThisDate = _convertDateValuesToZeroIfNull(this);
+    final nonNullOtherDate = _convertDateValuesToZeroIfNull(other);
+    if (nonNullThisDate == nonNullOtherDate) {
+      return true;
+    }
     return _smaller(nonNullThisDate, nonNullOtherDate);
   }
 
   bool operator >(Date other) {
-    var nonNullThisDate = _convertDateValuesToZeroIfNull(this);
-    var nonNullOtherDate = _convertDateValuesToZeroIfNull(other);
-
-    if (nonNullThisDate == nonNullOtherDate) return false;
+    final nonNullThisDate = _convertDateValuesToZeroIfNull(this);
+    final nonNullOtherDate = _convertDateValuesToZeroIfNull(other);
+    if (nonNullThisDate == nonNullOtherDate) {
+      return false;
+    }
     return _smaller(nonNullThisDate, nonNullOtherDate);
   }
 
@@ -99,9 +123,9 @@ abstract class Date {
     DateFormat dateFormat = DateFormat.ymd,
     String separator = '-',
   ]) {
-    var day = toStringWithLeadingZeroIfLengthIsOne(this.day);
-    var month = toStringWithLeadingZeroIfLengthIsOne(this.month);
-
+    final year = (this.year ?? 0).toString().padLeft(4, '0');
+    final month = (this.month ?? 0).toString().padLeft(2, '0');
+    final day = (this.day ?? 0).toString().padLeft(2, '0');
     late String date;
     switch (dateFormat) {
       case DateFormat.ymd:
@@ -115,15 +139,6 @@ abstract class Date {
         break;
     }
     return date;
-  }
-
-  /// If [number] length is 1 add a leading 0 character at concatenation.
-  ///
-  /// If length is not exactly 1 return normat toString()
-  static String toStringWithLeadingZeroIfLengthIsOne(int? number) {
-    return number.toString().length == 1
-        ? '0${number.toString()}'
-        : number.toString();
   }
 
   /// Returns a new [NullableValidDate] object with either the current values,
