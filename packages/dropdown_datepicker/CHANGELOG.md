@@ -1,3 +1,7 @@
+## [0.2.2] - 2021-05-28
+
+* Added DropdownDatePicker.onChanged
+
 ## [0.2.1] - 2021-05-28
 
 * Refactored
