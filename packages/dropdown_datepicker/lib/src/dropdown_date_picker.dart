@@ -221,19 +221,12 @@ List<DropdownMenuItem<int?>> _buildDropdownMenuItemList(
           value: i,
           child: Center(
             child: Text(
-              _toStringWithLeadingZeroIfLengthIsOne(i),
+              (i ?? 0).toString().padLeft(2, '0'),
             ),
           ),
         ),
       )
       .toList();
-}
-
-String _toStringWithLeadingZeroIfLengthIsOne(int? i) {
-  if (i == null || i < 0) {
-    return '';
-  }
-  return Date.toStringWithLeadingZeroIfLengthIsOne(i);
 }
 
 Iterable<int?> _intGenerator(int start, int end, bool ascending) sync* {

@@ -143,16 +143,6 @@ class DateUtil {
     required DateFormat format,
     String separator = '-',
   }) {
-    final year = date.year;
-    final month = Date.toStringWithLeadingZeroIfLengthIsOne(date.month);
-    final day = Date.toStringWithLeadingZeroIfLengthIsOne(date.day);
-    switch (format) {
-      case DateFormat.ymd:
-        return '$year$separator$month$separator$day';
-      case DateFormat.dmy:
-        return '$day$separator$month$separator$year';
-      case DateFormat.mdy:
-        return '$month$separator$day$separator$year';
-    }
+    return date.toString(format, separator);
   }
 }

@@ -123,8 +123,9 @@ abstract class Date {
     DateFormat dateFormat = DateFormat.ymd,
     String separator = '-',
   ]) {
-    final day = toStringWithLeadingZeroIfLengthIsOne(this.day);
-    final month = toStringWithLeadingZeroIfLengthIsOne(this.month);
+    final year = (this.year ?? 0).toString().padLeft(4, '0');
+    final month = (this.month ?? 0).toString().padLeft(2, '0');
+    final day = (this.day ?? 0).toString().padLeft(2, '0');
     late String date;
     switch (dateFormat) {
       case DateFormat.ymd:
@@ -138,16 +139,6 @@ abstract class Date {
         break;
     }
     return date;
-  }
-
-  /// If [number] length is 1 add a leading 0 character at concatenation.
-  ///
-  /// If length is not exactly 1 return normat toString()
-  static String toStringWithLeadingZeroIfLengthIsOne(int? number) {
-    number = number ?? 0;
-    return number.toString().length == 1
-        ? '0${number.toString()}'
-        : number.toString();
   }
 
   /// Returns a new [NullableValidDate] object with either the current values,
