@@ -1,4 +1,4 @@
-import 'package:dropdown_date_picker/dropdown_date_picker.dart';
+import 'package:dropdown_datepicker/dropdown_datepicker.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
