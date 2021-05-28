@@ -28,6 +28,7 @@ class DropdownDatePicker extends StatefulWidget {
     this.dropdownColor,
     this.underline = const _Underline(),
     this.separator,
+    this.onChanged,
   })  : assert(firstYear < lastYear, 'First year must be before last year.'),
         super(key: key);
 
@@ -57,8 +58,11 @@ class DropdownDatePicker extends StatefulWidget {
   /// Defaults to a 1.0 height bottom container with Theme.of(context).dividerColor
   final Widget? underline;
 
-  /// 
+  ///
   final DateSeparator? separator;
+
+  ///
+  final ValueChanged<Date>? onChanged;
 
   @override
   DropdownDatePickerState createState() => DropdownDatePickerState();
@@ -72,6 +76,9 @@ class DropdownDatePickerState extends State<DropdownDatePicker> {
       setState(() {
         _currentDate = date;
       });
+      if (widget.onChanged != null) {
+        widget.onChanged!(date);
+      }
     }
   }
 
