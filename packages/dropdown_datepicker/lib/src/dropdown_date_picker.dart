@@ -6,6 +6,8 @@ import 'date_separator.dart';
 import 'date_util.dart';
 import 'nullable_valid_date.dart';
 
+typedef _MenuBuilder = List<Widget> Function(BuildContext, ThemeData);
+
 /// Creates a [DropdownDatePicker] widget instance
 ///
 /// Displays year, month and day [DropdownButton] widgets in a [Row]
@@ -94,78 +96,118 @@ class DropdownDatePickerState extends State<DropdownDatePicker> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    _MenuBuilder first;
+    _MenuBuilder second;
+    _MenuBuilder third;
+    switch (widget.dateFormat) {
+      case DateFormat.ymd:
+        first = _buildYear;
+        second = _buildMonth;
+        third = _buildDay;
+        break;
+      case DateFormat.dmy:
+        first = _buildDay;
+        second = _buildMonth;
+        third = _buildYear;
+        break;
+      case DateFormat.mdy:
+        first = _buildMonth;
+        second = _buildDay;
+        third = _buildYear;
+        break;
+    }
+    
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ...first(context, theme),
+        const SizedBox(width: 12.0),
+        ...second(context, theme),
+        const SizedBox(width: 12.0),
+        ...third(context, theme),
+      ],
+    );
+  }
+
+  List<Widget> _buildYear(BuildContext context, ThemeData theme) {
+    return [
+      _DropdownMenuButton(
+        value: currentDate.year,
+        textStyle: widget.textStyle,
+        dropdownColor: widget.dropdownColor,
+        underline: widget.underline,
+        onChanged: (int? value) {
+          _setCurrentDate(NullableValidDate(
+            year: value,
+            month: month,
+            day: day,
+          ));
+        },
+        items: _buildDropdownMenuItemList(
+          widget.firstYear,
+          widget.lastYear,
+          false,
+        ),
+      ),
+      if (widget.separator != null)
+        Text(
+          widget.separator!.year,
+          style: theme.textTheme.caption,
+        ),
+    ];
+  }
+
+  List<Widget> _buildMonth(BuildContext context, ThemeData theme) {
+    return [
+      _DropdownMenuButton(
+        value: currentDate.month,
+        textStyle: widget.textStyle,
+        dropdownColor: widget.dropdownColor,
+        underline: widget.underline,
+        onChanged: (int? value) {
+          _setCurrentDate(NullableValidDate(
+            year: year,
+            month: value,
+            day: day,
+          ));
+        },
+        items: _buildDropdownMenuItemList(1, 12, true),
+      ),
+      if (widget.separator != null)
+        Text(
+          widget.separator!.month,
+          style: theme.textTheme.caption,
+        ),
+    ];
+  }
+
+  List<Widget> _buildDay(BuildContext context, ThemeData theme) {
     final maxDay = DateUtil.daysInDate(
       month: currentDate.month,
       year: currentDate.year,
     );
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _DropdownMenuButton(
-          value: currentDate.year,
-          textStyle: widget.textStyle,
-          dropdownColor: widget.dropdownColor,
-          underline: widget.underline,
-          onChanged: (int? value) {
-            _setCurrentDate(NullableValidDate(
-              year: value,
-              month: month,
-              day: day,
-            ));
-          },
-          items: _buildDropdownMenuItemList(
-            widget.firstYear,
-            widget.lastYear,
-            false,
-          ),
+    return [
+      _DropdownMenuButton(
+        value: currentDate.day,
+        textStyle: widget.textStyle,
+        dropdownColor: widget.dropdownColor,
+        underline: widget.underline,
+        onChanged: (int? value) {
+          _setCurrentDate(NullableValidDate(
+            year: year,
+            month: month,
+            day: value,
+          ));
+        },
+        items: _buildDropdownMenuItemList(1, maxDay, true),
+      ),
+      if (widget.separator != null)
+        Text(
+          widget.separator!.day,
+          style: theme.textTheme.caption,
         ),
-        if (widget.separator != null)
-          Text(
-            widget.separator!.year,
-            style: theme.textTheme.caption,
-          ),
-        const SizedBox(width: 12.0),
-        _DropdownMenuButton(
-          value: currentDate.month,
-          textStyle: widget.textStyle,
-          dropdownColor: widget.dropdownColor,
-          underline: widget.underline,
-          onChanged: (int? value) {
-            _setCurrentDate(NullableValidDate(
-              year: year,
-              month: value,
-              day: day,
-            ));
-          },
-          items: _buildDropdownMenuItemList(1, 12, true),
-        ),
-        if (widget.separator != null)
-          Text(
-            widget.separator!.month,
-            style: theme.textTheme.caption,
-          ),
-        const SizedBox(width: 12.0),
-        _DropdownMenuButton(
-          value: currentDate.day,
-          textStyle: widget.textStyle,
-          dropdownColor: widget.dropdownColor,
-          underline: widget.underline,
-          onChanged: (int? value) {
-            _setCurrentDate(NullableValidDate(
-              year: year,
-              month: month,
-              day: value,
-            ));
-          },
-          items: _buildDropdownMenuItemList(1, maxDay, true),
-        ),
-        if (widget.separator != null)
-          Text(
-            widget.separator!.day,
-            style: theme.textTheme.caption,
-          ),
-      ],
-    );
+    ];
   }
 }
 
