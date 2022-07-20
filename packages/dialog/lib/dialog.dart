@@ -28,15 +28,11 @@ Future<void> showTimerDialog({
   required WidgetBuilder builder,
   required Duration duration,
 }) {
-  return showDialog<void>(
+  return showFutureDialog(
     context: context,
     barrierDismissible: barrierDismissible,
-    builder: (BuildContext context) {
-      return _FutureDialog(
-        child: builder(context),
-        future: Future<void>.delayed(duration),
-      );
-    },
+    builder: builder,
+    future: Future<void>.delayed(duration),
   );
 }
 
@@ -71,6 +67,7 @@ Future<void> showFutureDialog({
       return _FutureDialog(
         child: builder(context),
         future: future,
+        barrierDismissible: barrierDismissible,
       );
     },
   );
@@ -81,11 +78,14 @@ class _FutureDialog extends StatefulWidget {
     Key? key,
     required this.child,
     required this.future,
+    required this.barrierDismissible,
   }) : super(key: key);
 
   final Widget child;
 
   final Future future;
+
+  final bool barrierDismissible;
 
   @override
   State<StatefulWidget> createState() {
@@ -124,7 +124,12 @@ class _FutureDialogState extends State<_FutureDialog>
 
   @override
   Widget build(BuildContext context) {
-    return widget.child;
+    return WillPopScope(
+      onWillPop: () {
+        return Future.value(widget.barrierDismissible);
+      },
+      child: widget.child,
+    );
   }
 
   void _closeDialog() {
