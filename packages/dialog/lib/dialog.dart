@@ -102,10 +102,10 @@ class _FutureDialogState extends State<_FutureDialog>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    widget.future.whenComplete(() {
-      complete = true;
-      _closeDialog();
-    });
+    widget.future.then<void>(
+      (dynamic _) => _whenComplete(),
+      onError: (Object _) => _whenComplete(),
+    );
   }
 
   @override
@@ -131,5 +131,10 @@ class _FutureDialogState extends State<_FutureDialog>
     if (mounted && foreground && complete) {
       Navigator.of(context, rootNavigator: true).pop();
     }
+  }
+
+  void _whenComplete() {
+    complete = true;
+    _closeDialog();
   }
 }
