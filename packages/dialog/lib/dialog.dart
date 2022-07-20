@@ -2,7 +2,6 @@ library dialog;
 
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Displays a dialog above the current contents of the app.
@@ -102,16 +101,16 @@ class _FutureDialogState extends State<_FutureDialog>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
-    widget.future.whenComplete(() {
-      complete = true;
-      _closeDialog();
-    });
+    WidgetsBinding.instance.addObserver(this);
+    widget.future.then<void>(
+      (dynamic _) => _whenComplete(),
+      onError: (Object _) => _whenComplete(),
+    );
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -132,5 +131,10 @@ class _FutureDialogState extends State<_FutureDialog>
     if (mounted && foreground && complete) {
       Navigator.of(context, rootNavigator: true).pop();
     }
+  }
+
+  void _whenComplete() {
+    complete = true;
+    _closeDialog();
   }
 }
